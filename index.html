@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURORA FASHION - New Arrivals</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== EXISTING STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #1e1e1e;
+            background-color: #ffffff;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #1e1e1e;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: #1e1e1e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #c7a17a;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-icons i {
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-icons i:hover {
+            color: #c7a17a;
+        }
+
+        .cart-icon {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-icon {
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 0.7rem 1.5rem;
+            color: #1e1e1e;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .user-dropdown a:hover {
+            background: #f5f5f5;
+            color: #c7a17a;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-content.large {
+            max-width: 900px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 35px;
+            height: 35px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            z-index: 2000;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-cart {
+            background: none;
+            border: 1px solid #ddd;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            color: #c7a17a;
+            font-weight: 600;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .cart-qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .whatsapp-cart-btn, .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .whatsapp-cart-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .checkout-btn {
+            background: #c7a17a;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            min-height: 600px;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #1e1e1e;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            border: 2px solid #1e1e1e;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border-radius: 50px;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: #1e1e1e;
+        }
+
+        .hero-image {
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Products Grid */
+        .top-week {
+            max-width: 1400px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .top-week h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .product-card {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            height: 350px;
+            background: #f5f5f5;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-category {
+            color: #c7a17a;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: #1e1e1e;
+        }
+
+        .add-to-cart {
+            padding: 0.8rem 2rem;
+            background: transparent;
+            border: 1px solid #1e1e1e;
+            cursor: pointer;
+            margin-top: 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .add-to-cart:hover {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        /* Product Detail Modal */
+        .product-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-modal.show {
+            display: flex;
+        }
+
+        .product-modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 1000px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 30px;
+        }
+
+        .close-product-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .detail-image {
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detail-info h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .detail-price {
+            font-size: 1.8rem;
+            color: #c7a17a;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .size-options, .color-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .size-btn {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .size-btn.selected {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        .color-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .color-btn.selected {
+            border-color: #1e1e1e;
+        }
+
+        .color-btn.brown { background: #8B4513; }
+        .color-btn.white { background: #ffffff; border: 1px solid #ddd; }
+        .color-btn.yellow { background: #FFD700; }
+        .color-btn.pink { background: #FF69B4; }
+
+        .whatsapp-order-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .customer-form {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-field input, .form-field textarea, .form-field select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid, .product-detail {
+                grid-template-columns: 1fr;
+            }
+            .cart-sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Product Detail Modal -->
+    <div class="product-modal" id="productModal">
+        <div class="product-modal-content">
+            <span class="close-product-modal" onclick="closeProductModal()">&times;</span>
+            <div class="product-detail" id="productDetail"></div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart (<span id="cartItemCount">0</span>)</h3>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotal">Rs. 0.00</span>
+            </div>
+            <button class="whatsapp-cart-btn" onclick="sendCartWhatsAppOrder()"><i class="fab fa-whatsapp"></i> Order via WhatsApp</button>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="scrollToTop()">AURORA FASHION</a>
+            <div class="nav-links">
+                <a onclick="scrollToTop()">HOME</a>
+                <a onclick="openCollectionModal()">SHOP</a>
+                <a onclick="alert('About Us: Premium fashion for modern women')">ABOUT</a>
+                <a onclick="alert('Contact: +94 77 160 1776')">CONTACT</a>
+            </div>
+            <div class="nav-icons">
+                <i class="fas fa-search" onclick="alert('Search feature available')"></i>
+                <div class="user-icon">
+                    <i class="far fa-user"></i>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a onclick="alert('Sign in feature')">Sign In</a>
+                        <a onclick="alert('Create account')">Create Account</a>
+                    </div>
+                </div>
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount" style="position: absolute; top: -8px; right: -8px; background: #c7a17a; color: white; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px;">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">AURORA<br><span style="color:#c7a17a;">FASHION</span></h1>
+            <a class="btn" onclick="openCollectionModal()">SHOP COLLECTION →</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://i.postimg.cc/1zMgq6qP/photo-2026-02-27-20-15-58.jpg" alt="AURORA Fashion">
+        </div>
+    </section>
+
+    <!-- Trending Products -->
+    <section class="top-week">
+        <h2>New Arrivals 2026</h2>
+        <div class="products-grid" id="trendingProducts"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section"><h4>AURORA FASHION</h4><p style="color:#999;">Premium clothing for the modern individual.</p></div>
+            <div class="footer-section"><h4>Quick Links</h4><ul><li><a>About Us</a></li><li><a>Contact</a></li></ul></div>
+            <div class="footer-section"><h4>Categories</h4><ul><li><a>Kurtis</a></li><li><a>Frocks</a></li></ul></div>
+            <div class="footer-section"><h4>Follow Us</h4><ul><li><a>Facebook</a></li><li><a>TikTok</a></li></ul></div>
+        </div>
+        <div class="copyright" style="text-align:center; padding-top:2rem;">&copy; 2024 AURORA FASHION. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // ========== COMPLETE PRODUCTS DATABASE WITH NEW ITEMS (ID 39-43) ==========
+        const products = [
+            { id: 1, name: "Sleeveless Kurti", price: 1000, description: "Elegant sleeveless kurti made from premium cotton fabric.", image: "https://i.postimg.cc/bYWf67sf/photo-2026-02-14-01-16-08.jpg", sizes: ["XS","S","M","L","XL"], colors: ["white","black"] },
+            { id: 2, name: "Printed Kurti", price: 1400, description: "Trendy short kurti with modern design.", image: "https://i.postimg.cc/G3WGcp4n/photo-2026-02-14-01-28-46.jpg", sizes: ["XS","S","M","L","XL"], colors: ["black","white"] },
+            { id: 7, name: "Short Kurti", price: 1200, description: "Short Anarkali style kurti with flare.", image: "https://i.postimg.cc/6qgykSkb/photo-2026-02-14-21-22-29.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Light blue"] },
+            { id: 8, name: "Long Kurti", price: 1400, description: "Simple straight cut kurti for daily wear.", image: "https://i.postimg.cc/QN6qgD4z/photo-2026-02-14-00-57-01.jpg", sizes: ["XS","S","M","L","XL"], colors: ["white","black"] },
+            { id: 12, name: "Lavender Short Frock", price: 2100, description: "Fresh, stylish and comfortable frock.", image: "https://i.postimg.cc/CxZg257f/photo-2026-02-14-21-19-58.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Purple"] },
+            { id: 20, name: "Sleeveless Short Frock", price: 2100, description: "Stylish sleeveless short frock.", image: "https://i.postimg.cc/X7pDTHkX/photo-2026-02-14-20-10-05.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Light blue","pink"] },
+            { id: 21, name: "Short Frock", price: 2100, description: "Elegant short frock for any occasion.", image: "https://i.postimg.cc/GmTVs7Bw/photo-2026-02-14-20-10-00.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Light Blue","pink"] },
+            { id: 23, name: "Milk Maid Frock (Black)", price: 2400, description: "Elegant milkmaid frock in black.", image: "https://i.postimg.cc/FsY7sqyL/photo-2026-02-21-22-37-34.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Black"] },
+            { id: 24, name: "Milk Maid Frock (Peach)", price: 2400, description: "Elegant milkmaid frock in peach.", image: "https://i.postimg.cc/pXygbtCt/photo-2026-02-27-20-16-06.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Peach"] },
+            { id: 25, name: "Milk Maid Frock (White)", price: 2400, description: "Elegant milkmaid frock in white.", image: "https://i.postimg.cc/xdV7zNSh/photo-2026-02-27-20-26-01.jpg", sizes: ["XS","S","M","L","XL"], colors: ["White"] },
+            { id: 26, name: "Milk Maid Frock (Light Green)", price: 2400, description: "Elegant milkmaid frock in light green.", image: "https://i.postimg.cc/50xRPcyL/photo-2026-02-27-20-16-12.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Light green"] },
+            { id: 27, name: "Milk Maid Frock (Dark Green)", price: 2400, description: "Elegant milkmaid frock in dark green.", image: "https://i.postimg.cc/Z51HvrZT/photo-2026-02-28-18-19-03.jpg", sizes: ["XS","S","M","L","XL"], colors: ["Dark green"] },
+            { id: 28, name: "Pink Kurti Top", price: 2100, description: "Stylish pink kurti top.", image: "https://i.postimg.cc/QdYMTjtz/photo-2026-03-10-00-19-26.jpg", sizes: ["XS","S","M","L","XL"], colors: ["pink","maroon"] },
+            { id: 29, name: "Puff Sleeve Long Frock", price: 2400, description: "Beautiful long frock in golden color.", image: "https://i.postimg.cc/vHQ8246H/photo-2026-03-10-00-27-45.jpg", sizes: ["XS","S","M","L","XL"], colors: ["pink","purple","black"] },
+            { id: 30, name: "Long Long Frock", price: 2400, description: "Stunning long frock in red color.", image: "https://i.postimg.cc/P57tqKVX/photo-2026-03-10-00-14-32.jpg", sizes: ["XS","S","M","L","XL"], colors: ["red","pink","purple"] },
+            { id: 31, name: "Long Frock Green", price: 2400, description: "Beautiful long frock in green shade.", image: "https://i.postimg.cc/7hq4RRh5/photo-2026-03-10-00-14-43.jpg", sizes: ["XS","S","M","L","XL"], colors: ["dark-green","purple"] },
+            { id: 32, name: "Printed Kurti Top", price: 2100, description: "Trendy printed kurti top.", image: "https://i.postimg.cc/13bQSX44/photo-2026-03-10-00-14-54.jpg", sizes: ["XS","S","M","L","XL"], colors: ["multicolor"] },
+            { id: 33, name: "Short Frock Elegant", price: 2500, description: "Elegant Short Frock.", image: "https://i.postimg.cc/QCw9CVRm/photo-2-2026-04-01-09-55-12.jpg", sizes: ["XS","S","M","L","XL"], colors: ["white","black","red"] },
+            { id: 35, name: "Milk Maid Frock (Navy Blue)", price: 2100, description: "Stylish kurti top.", image: "https://i.postimg.cc/KjGDHrgz/photo-3-2026-03-31-21-11-56.jpg", sizes: ["XS","S","M","L","XL"], colors: ["light blue","navy"] },
+            { id: 36, name: "Long Frock New", price: 2400, description: "Stylish Long Frock.", image: "https://i.postimg.cc/fWpvqvLm/photo-1-2026-04-01-09-55-12.jpg", sizes: ["XS","S","M","L","XL"], colors: ["light blue","pink"] },
+            { id: 37, name: "Long Frock Designer", price: 2400, description: "Designer Long Frock.", image: "https://i.postimg.cc/SKfZwY5y/photo-2026-04-01-10-12-29.jpg", sizes: ["XS","S","M","L","XL"], colors: ["light blue","maroon"] },
+            { id: 38, name: "Long Frock Premium", price: 2400, description: "Premium Long Frock.", image: "https://i.postimg.cc/Fz8Gjyfb/photo-3-2026-04-01-09-55-12.jpg", sizes: ["XS","S","M","L","XL"], colors: ["light blue","red"] },
+            // ========== NEW PRODUCTS ADDED (ID 39, 40, 41, 42, 43) ==========
+            { id: 39, name: "Brown Long Frock - Indonesian Cotton", price: 2400, description: "Stylish Long Frock perfect for casual and festive occasions. Made from premium Indonesian cotton for comfort and elegance.", image: "https://i.postimg.cc/FHqrK61y/Whats-App-Image-2026-05-05-at-15-16-00.jpg", sizes: ["XS", "S", "M", "L", "XL"], colors: ["Brown"] },
+            { id: 40, name: "White Long Frock - Indonesian Cotton", price: 2400, description: "Stylish Long Frock perfect for casual and festive occasions. Made from premium Indonesian cotton for comfort and elegance.", image: "https://i.postimg.cc/j2pVbpMq/Whats-App-Image-2026-05-05-at-15-16-32.jpg", sizes: ["XS", "S", "M", "L", "XL"], colors: ["white"] },
+            { id: 41, name: "Yellow Puff Frock - Indonesian Cotton", price: 2400, description: "Stylish puff sleeve frock perfect for casual and festive occasions. Made from premium fabric for comfort and elegance.", image: "https://i.postimg.cc/B6Y79fHy/photo-2026-05-13-18-15-03.jpg", sizes: ["XS", "S", "M", "L", "XL"], colors: ["Yellow"] },
+            { id: 42, name: "Yellow Frock - Indonesian Cotton", price: 2400, description: "Stylish Long Frock perfect for casual and festive occasions. Made from premium Indonesian cotton for comfort and elegance.", image: "https://i.postimg.cc/vTxgY5gh/photo-2026-05-13-18-14-51.jpg", sizes: ["XS", "S", "M", "L", "XL"], colors: ["Yellow"] },
+            { id: 43, name: "Meroon Long Frock - Indonesian Cotton", price: 2400, description: "Stylish Long Frock perfect for casual and festive occasions. Made from premium Indonesian cotton for comfort and elegance.", image: "https://i.postimg.cc/9Qbnt9zH/photo-2026-05-13-18-24-45.jpg", sizes: ["XS", "S", "M", "L", "XL"], colors: ["Pink"] }
+        ];
+
+        // Cart system
+        let cart = [];
+        const whatsappNumber = "94771601776";
+
+        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
+        function closeProductModal() { document.getElementById('productModal').classList.remove('show'); }
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function openCollectionModal() { alert('Collections: Kurti, Frock, Premium - Browse our new arrivals!'); }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            const existing = cart.find(item => item.id === productId);
+            if(existing) existing.quantity += 1;
+            else cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 });
+            updateCart();
+            alert(`${product.name} added to cart!`);
+        }
+
+        function updateCart() {
+            const cartCountSpan = document.getElementById('cartCount');
+            const cartItemCount = document.getElementById('cartItemCount');
+            const cartItemsDiv = document.getElementById('cartItems');
+            const cartTotalSpan = document.getElementById('cartTotal');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountSpan.textContent = totalItems;
+            cartItemCount.textContent = totalItems;
+            if(cart.length === 0) { cartItemsDiv.innerHTML = '<p style="text-align:center;">Cart empty</p>'; cartTotalSpan.textContent = 'Rs. 0.00'; return; }
+            let total = 0;
+            cartItemsDiv.innerHTML = cart.map((item, idx) => {
+                total += item.price * item.quantity;
+                return `<div class="cart-item"><div class="cart-item-image"><img src="${item.image}"></div><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">Rs. ${item.price}</div><div class="cart-item-quantity"><button class="cart-qty-btn" onclick="updateCartItem(${idx},-1)">-</button><span>${item.quantity}</span><button class="cart-qty-btn" onclick="updateCartItem(${idx},1)">+</button><span style="color:red; cursor:pointer;" onclick="removeFromCart(${idx})">Remove</span></div></div></div>`;
+            }).join('');
+            cartTotalSpan.textContent = `Rs. ${total.toLocaleString()}.00`;
+        }
+
+        function updateCartItem(index, delta) { cart[index].quantity = Math.max(1, cart[index].quantity + delta); updateCart(); }
+        function removeFromCart(index) { cart.splice(index,1); updateCart(); }
+        function checkout() { if(cart.length===0) alert('Cart empty'); else { alert('Order placed! Thank you.'); cart=[]; updateCart(); toggleCart(); } }
+
+        function sendCartWhatsAppOrder() {
+            if(cart.length===0) { alert('Cart empty'); return; }
+            let msg = `*NEW ORDER FROM CART - AURORA FASHION*\n\n━━━━━━━━━━━━━━━━━━\n*CART ITEMS*\n━━━━━━━━━━━━━━━━━━\n`;
+            let total=0;
+            cart.forEach((item,i)=> { let sub = item.price*item.quantity; total+=sub; msg+=`\n${i+1}. ${item.name} x${item.quantity} = Rs.${sub}\n`; });
+            msg+=`\n━━━━━━━━━━━━━━━━━━\n*TOTAL: Rs.${total.toLocaleString()}*\n━━━━━━━━━━━━━━━━━━\n\nName:\nPhone:\nAddress:\nPayment: Cash on Delivery\n\nThank you!`;
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Product detail with customer form
+        let selectedProduct = null, selectedSize = null, selectedColor = null, productQty = 1;
+
+        function openProductDetail(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            selectedSize = selectedProduct.sizes[0];
+            selectedColor = selectedProduct.colors[0];
+            productQty = 1;
+            const detailDiv = document.getElementById('productDetail');
+            detailDiv.innerHTML = `
+                <div class="detail-image"><img src="${selectedProduct.image}" alt="${selectedProduct.name}"></div>
+                <div class="detail-info">
+                    <h1>${selectedProduct.name}</h1>
+                    <div class="detail-price">Rs. ${selectedProduct.price.toLocaleString()}.00</div>
+                    <p>${selectedProduct.description}</p>
+                    <div class="size-section"><h3>Size:</h3><div class="size-options" id="sizeOptions">${selectedProduct.sizes.map(s => `<button class="size-btn ${s===selectedSize?'selected':''}" onclick="selectSize('${s}')">${s}</button>`).join('')}</div></div>
+                    <div class="color-section"><h3>Color:</h3><div class="color-options" id="colorOptions">${selectedProduct.colors.map(c => `<div class="color-btn ${c.toLowerCase()} ${c===selectedColor?'selected':''}" style="background:${c==='Brown'?'#8B4513':c==='white'?'#fff':c==='Yellow'?'#FFD700':c==='Pink'?'#FF69B4':'#ccc'}; border:1px solid #ddd;" onclick="selectColor('${c}')" title="${c}"></div>`).join('')}</div></div>
+                    <div class="quantity-section"><h3>Quantity:</h3><div class="quantity-controls" style="display:flex;gap:10px;"><button class="qty-btn" onclick="changeQty(-1)">-</button><span id="qtyVal">1</span><button class="qty-btn" onclick="changeQty(1)">+</button></div></div>
+                    <div class="customer-form"><h3>Customer Details</h3><div class="form-field"><label>Full Name</label><input type="text" id="custName" placeholder="Your name"></div><div class="form-field"><label>Phone</label><input type="tel" id="custPhone" placeholder="Phone number"></div><div class="form-field"><label>Address</label><textarea id="custAddr" rows="2" placeholder="Delivery address"></textarea></div><div class="form-field"><label>Payment</label><select id="payMethod"><option>Cash on Delivery</option><option>Bank Transfer</option></select></div></div>
+                    <button class="whatsapp-order-btn" onclick="sendProductWhatsAppOrder()"><i class="fab fa-whatsapp"></i> Order Now via WhatsApp</button>
+                    <div class="order-summary" style="background:#f8f9fa;padding:15px;border-radius:10px;"><div>Item: ${selectedProduct.name}</div><div>Size: <span id="summarySize">${selectedSize}</span></div><div>Color: <span id="summaryColor">${selectedColor}</span></div><div>Qty: <span id="summaryQty">1</span></div><div><strong>Total: Rs. <span id="summaryTotal">${selectedProduct.price}</span>.00</strong></div></div>
+                </div>`;
+            document.getElementById('productModal').classList.add('show');
+        }
+        function selectSize(s) { selectedSize=s; document.querySelectorAll('.size-btn').forEach(btn=>btn.classList.remove('selected')); event.target.classList.add('selected'); document.getElementById('summarySize').innerText=s; }
+        function selectColor(c) { selectedColor=c; document.querySelectorAll('.color-btn').forEach(btn=>btn.classList.remove('selected')); event.target.classList.add('selected'); document.getElementById('summaryColor').innerText=c; }
+        function changeQty(delta) { productQty = Math.max(1, productQty+delta); document.getElementById('qtyVal').innerText=productQty; document.getElementById('summaryQty').innerText=productQty; document.getElementById('summaryTotal').innerText=selectedProduct.price*productQty; }
+        function sendProductWhatsAppOrder() {
+            const name = document.getElementById('custName')?.value;
+            const phone = document.getElementById('custPhone')?.value;
+            const addr = document.getElementById('custAddr')?.value;
+            const payment = document.getElementById('payMethod')?.value;
+            if(!name || !phone || !addr) { alert('Please fill all customer details'); return; }
+            const total = selectedProduct.price * productQty;
+            const msg = `*NEW ORDER - AURORA FASHION*\n━━━━━━━━━━━━━━━━━━\nProduct: ${selectedProduct.name}\nSize: ${selectedSize}\nColor: ${selectedColor}\nQuantity: ${productQty}\nTotal: Rs.${total}\n━━━━━━━━━━━━━━━━━━\nCustomer: ${name}\nPhone: ${phone}\nAddress: ${addr}\nPayment: ${payment}\n━━━━━━━━━━━━━━━━━━\nThank you!`;
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Display trending including all new IDs (39,40,41,42,43)
+        function displayTrending() {
+            const trendingIds = [20,21,23,24,25,26,27,28,29,30,31,32,33,35,36,37,38,39,40,41,42,43];
+            const trendingProducts = products.filter(p => trendingIds.includes(p.id));
+            const grid = document.getElementById('trendingProducts');
+            grid.innerHTML = trendingProducts.map(p => `
+                <div class="product-card" onclick="openProductDetail(${p.id})">
+                    <div class="product-image"><img src="${p.image}" alt="${p.name}"></div>
+                    <div class="product-category">NEW ARRIVAL</div>
+                    <div class="product-price">Rs ${p.price.toLocaleString()}.00</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${p.id})">ADD TO CART</button>
+                </div>
+            `).join('');
+        }
+
+        window.onload = () => { displayTrending(); updateCart(); };
+        window.addEventListener('click', (e) => { if(e.target.classList.contains('modal')) e.target.classList.remove('show'); if(e.target.classList.contains('product-modal')) e.target.classList.remove('show'); });
+    </script>
+</body>
+</html>
